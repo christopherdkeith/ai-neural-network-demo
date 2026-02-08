@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Network Demo - Square Classification</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Neural Network Demo - Square Classification</h1>
+            <a href="https://github.com/christopherdkeith/ai-neural-network-demo" class="github-link" target="_blank"
+                rel="noopener noreferrer">
+                <svg height="24" width="24" viewBox="0 0 16 16" fill="currentColor">
+                    <path
+                        d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+                    </path>
+                </svg>
+                View on GitHub
+            </a>
+        </div>
+
+        <div class="content">
+            <div class="left-panel">
+                <div id="chart-container"></div>
+
+                <div class="explanation">
+                    <h4>Understanding the Neural Network:</h4>
+                    <p><strong>In a nutshell:</strong> This demo shows a simple neural network with 4 perceptrons in a
+                        hidden layer, each learning one edge of a square. The network architecture is: 2 inputs (x, y) →
+                        4 hidden nodes → 1 output. Each hidden node is a perceptron that learns to detect if a point is
+                        on the correct side of one edge: Top Edge, Bottom Edge, Left Edge, and Right Edge. The output
+                        combines all four decisions—a point is inside the square only if it passes all four edge tests
+                        (logical AND).</p>
+
+                    <p><strong>This is how neural networks work:</strong> While a single perceptron can only learn a
+                        straight line, a neural network with multiple nodes can learn more complex patterns. By
+                        combining simple linear decisions (edges), we create a more sophisticated classifier (square
+                        detection). This demonstrates the power of neural networks: <em>simple components working
+                            together can solve complex problems</em>. Watch how each node independently learns its edge,
+                        then collectively they define the square boundary.</p>
+
+                    <p><strong>Note on Implementation:</strong> This demo uses a simplified, explicit approach to make
+                        the learning process visible and understandable. Professional neural network libraries
+                        (TensorFlow,
+                        PyTorch, etc.) use vectorized matrix operations and backpropagation for efficiency. Here, we
+                        train
+                        each perceptron independently with its own target, making it easy to see how each node learns.
+                        While unorthodox, this teaching-focused approach reveals the fundamental concept: <em>multiple
+                            simple
+                            learners combining to solve complex problems</em>.</p>
+                </div>
+
+                <div class="explanation">
+                    <h4>How it works:</h4>
+                    <p><strong>Target Square:</strong> shown in red (solid line)<br>
+                        Points inside the square are classified as +1 (green), outside as -1 (blue).</p>
+                    <p><strong>Network Learning:</strong> In each training round, the network learns through these
+                        steps:</p>
+                    <ol style="margin: 10px 0; padding-left: 25px; font-size: 13px;">
+                        <li><strong>Forward propagation:</strong> For each point, all 4 hidden nodes make predictions:
+                            <br>• Top Edge node: predicts if point is below the top edge
+                            <br>• Bottom Edge node: predicts if point is above the bottom edge
+                            <br>• Left Edge node: predicts if point is right of the left edge
+                            <br>• Right Edge node: predicts if point is left of the right edge
+                            <br>The output combines these: Inside (+1) only if ALL four conditions are true.
+                        </li>
+                        <li><strong>Find mistakes:</strong> Compare the network's prediction with the correct answer
+                            (whether the point should be +1 or -1 based on the red target square).</li>
+                        <li><strong>Adjust weights:</strong> Each hidden node independently updates its weights using
+                            the
+                            perceptron learning rule:<br>
+                            New Weight = Old Weight + (Learning Rate × Error × Input)<br>
+                            This nudges each edge toward its correct position.</li>
+                        <li><strong>Repeat:</strong> The network goes through all points, with each node making
+                            corrections until it classifies everything correctly.</li>
+                    </ol>
+                    <p><strong>Learned Boundary:</strong> The dashed orange rectangle shows where the network currently
+                        thinks the square is. Watch it converge toward the red target square as training progresses!</p>
+                    <p><strong>Goal:</strong> Make the learned boundary match the target square by correctly classifying
+                        all points.</p>
+                </div>
+
+                <div class="explanation">
+                    <h4>Getting Started:</h4>
+                    <ol>
+                        <li><strong>Click "Start Training"</strong> to watch the network learn. The orange dashed
+                            rectangle (learned boundary) will adjust as each node learns its edge.</li>
+                        <li><strong>Watch the accuracy increase</strong> as the network corrects its mistakes and the
+                            learned boundary converges toward the red target square.</li>
+                        <li><strong>Observe the 4 hidden nodes</strong> in the right panel. Each node's weights define
+                            one
+                            edge of the square. Watch them adjust independently!</li>
+                        <li><strong>Test the network:</strong> Once training has started, click anywhere on the chart
+                            to add a test point. The network will predict whether it's inside or outside, shown as a
+                            diamond
+                            marker.</li>
+                        <li><strong>Adjust the learning rate</strong> to see how it affects learning speed. Try 0.01
+                            (slow and steady) vs 0.5 (fast but jumpy).</li>
+                        <li><strong>Change the target square</strong> position and size to create different
+                            classification problems.</li>
+                        <li><strong>Generate new data points</strong> to see how the network adapts to different
+                            point distributions.</li>
+                        <li><strong>Reset the network</strong> to start learning from scratch with new random
+                            weights.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="right-panel">
+                <div class="info-box">
+                    <h3>Training Status</h3>
+                    <div class="info-row">
+                        <span class="info-label">
+                            Training Round:
+                            <span class="info-help">?
+                                <span class="tooltip">Number of complete passes through all training data points</span>
+                            </span>
+                        </span>
+                        <span class="info-value" id="training-round">0</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">
+                            Accuracy:
+                            <span class="info-help">?
+                                <span class="tooltip">Percentage of correctly classified points</span>
+                            </span>
+                        </span>
+                        <span class="info-value" id="accuracy">0%</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">
+                            Correct:
+                            <span class="info-help">?
+                                <span class="tooltip">Number of points the perceptron classified correctly</span>
+                            </span>
+                        </span>
+                        <span class="info-value" id="correct">0</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">
+                            Wrong:
+                            <span class="info-help">?
+                                <span class="tooltip">Number of points the perceptron misclassified</span>
+                            </span>
+                        </span>
+                        <span class="info-value" id="wrong">0</span>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <h3>Hidden Layer (4 Nodes)</h3>
+
+                    <h4 style="margin: 10px 0 5px 0; font-size: 14px; color: #666;">Node 0: Top Edge</h4>
+                    <div class="info-row">
+                        <span class="info-label">Weight (x):</span>
+                        <span class="info-value" id="node0-wx">0.000</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Weight (y):</span>
+                        <span class="info-value" id="node0-wy">0.000</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Bias:</span>
+                        <span class="info-value" id="node0-bias">0.000</span>
+                    </div>
+
+                    <h4 style="margin: 15px 0 5px 0; font-size: 14px; color: #666;">Node 1: Bottom Edge</h4>
+                    <div class="info-row">
+                        <span class="info-label">Weight (x):</span>
+                        <span class="info-value" id="node1-wx">0.000</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Weight (y):</span>
+                        <span class="info-value" id="node1-wy">0.000</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Bias:</span>
+                        <span class="info-value" id="node1-bias">0.000</span>
+                    </div>
+
+                    <h4 style="margin: 15px 0 5px 0; font-size: 14px; color: #666;">Node 2: Left Edge</h4>
+                    <div class="info-row">
+                        <span class="info-label">Weight (x):</span>
+                        <span class="info-value" id="node2-wx">0.000</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Weight (y):</span>
+                        <span class="info-value" id="node2-wy">0.000</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Bias:</span>
+                        <span class="info-value" id="node2-bias">0.000</span>
+                    </div>
+
+                    <h4 style="margin: 15px 0 5px 0; font-size: 14px; color: #666;">Node 3: Right Edge</h4>
+                    <div class="info-row">
+                        <span class="info-label">Weight (x):</span>
+                        <span class="info-value" id="node3-wx">0.000</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Weight (y):</span>
+                        <span class="info-value" id="node3-wy">0.000</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Bias:</span>
+                        <span class="info-value" id="node3-bias">0.000</span>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <h3>Target Square</h3>
+                    <div class="info-row">
+                        <label class="info-label" for="square-center-x">
+                            Center X:
+                            <span class="info-help">?
+                                <span class="tooltip">The x-coordinate of the square's center</span>
+                            </span>
+                        </label>
+                        <input type="number" class="info-input" id="square-center-x" value="0" step="0.1"
+                            onchange="updateTargetSquare()">
+                    </div>
+                    <div class="info-row">
+                        <label class="info-label" for="square-center-y">
+                            Center Y:
+                            <span class="info-help">?
+                                <span class="tooltip">The y-coordinate of the square's center</span>
+                            </span>
+                        </label>
+                        <input type="number" class="info-input" id="square-center-y" value="0" step="0.1"
+                            onchange="updateTargetSquare()">
+                    </div>
+                    <div class="info-row">
+                        <label class="info-label" for="square-width">
+                            Width:
+                            <span class="info-help">?
+                                <span class="tooltip">The width of the target square</span>
+                            </span>
+                        </label>
+                        <input type="number" class="info-input" id="square-width" value="0.8" step="0.1" min="0.1"
+                            max="2" onchange="updateTargetSquare()">
+                    </div>
+                    <div class="info-row">
+                        <label class="info-label" for="square-height">
+                            Height:
+                            <span class="info-help">?
+                                <span class="tooltip">The height of the target square</span>
+                            </span>
+                        </label>
+                        <input type="number" class="info-input" id="square-height" value="0.8" step="0.1" min="0.1"
+                            max="2" onchange="updateTargetSquare()">
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <h3>Controls</h3>
+
+                    <div class="input-group">
+                        <label for="learning-rate">
+                            Learning Rate:
+                            <span class="info-help">?
+                                <span class="tooltip">Controls how much the weights change each time the perceptron
+                                    makes a mistake. Higher values learn faster but may overshoot.</span>
+                            </span>
+                        </label>
+                        <input type="number" id="learning-rate" value="0.1" step="0.01" min="0.01" max="1">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="num-points">
+                            Number of Points:
+                            <span class="info-help">?
+                                <span class="tooltip">How many random data points to generate for training the
+                                    perceptron</span>
+                            </span>
+                        </label>
+                        <input type="number" id="num-points" value="50" step="10" min="10" max="200">
+                    </div>
+
+                    <button class="btn-primary" id="start-btn" onclick="startTraining()">Start Training</button>
+                    <button class="btn-danger" id="stop-btn" onclick="stopTraining()" disabled>Stop Training</button>
+                    <button class="btn-secondary" onclick="reset()">Reset Network</button>
+                    <button class="btn-secondary" onclick="generateNewData()">New Data Points</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="demo-footer">
+        <div class="footer-content">
+            <h3>Explore All Three Demos</h3>
+            <div class="demo-links">
+                <a href="https://christopherdkeith.github.io/ai-perceptron-demo/" class="demo-link">
+                    <strong>2D Perceptron:</strong> Linear Classification
+                </a>
+                <span class="separator">|</span>
+                <a href="https://christopherdkeith.github.io/ai-perceptron-demo-2/" class="demo-link">
+                    <strong>3D Perceptron:</strong> Plane Classification
+                </a>
+                <span class="separator">|</span>
+                <a href="https://christopherdkeith.github.io/ai-neural-network-demo/" class="demo-link current">
+                    <strong>Neural Network:</strong> Square Classification
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="network.js"></script>
+    <script src="ui.js"></script>
+</body>
+
+</html>
